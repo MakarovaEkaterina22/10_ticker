@@ -1,0 +1,45 @@
+# Создание директории и переход в неё
+mkdir python-flask-app && code python-flask-app
+
+.
+├── app
+│   ├── app.py
+│   ├── dockerfile
+│   └── requirements.txt
+├── db
+│   └── init.sql
+└── docker-compose.yaml
+
+#Сборка контейнера и запуск приложения 
+docker-compose up -d --build
+
+#Проверка что контейнеры запущены
+docker-compose ps
+
+#проверка api
+curl http://localhost:5000/api/demand/all #все записи
+curl http://localhost:5000/api/demand/avg-by-category #расчёт среднего
+
+#Запись новой строки в БД
+curl -X POST http://localhost:5000/api/demand/add \
+  -H "Content-Type: application/json" \
+  -d '{"category": "Clothing", "product_name": "Jeans", "demand": 120, "date": "2023-03-01"}'
+
+#Через dbeaver
+Хост: localhost
+
+Порт: 5432
+
+База: demand_db
+
+Пользователь: postgres
+
+Пароль: password
+---
+select * from
+products p ;
+---
+SELECT category, AVG(demand) as avg_demand 
+        FROM products 
+        GROUP BY category;
+
